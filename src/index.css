@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  /* Colors - Corporate Light */
+  --bg-app: #f4f7fa;
+  /* Light Gray Blue Background */
+  --bg-card: #ffffff;
+
+  --color-primary: #0052cc;
+  /* Corporate Blue */
+  --color-primary-dark: #0747a6;
+
+  --text-primary: #172b4d;
+  --text-secondary: #5e6c84;
+  --text-muted: #97a0af;
+  --text-white: #ffffff;
+
+  /* Accents */
+  --color-success: #36b37e;
+  /* Green */
+  --color-danger: #ff5630;
+  /* Red */
+  --color-warning: #ffab00;
+  /* Yellow/Orange */
+  --color-info: #00b8d9;
+  /* Cyan */
+
+  /* Gradients Legacy (Reset to flat colors mostly) */
+  --grad-red: #ff5630;
+  --grad-green: #36b37e;
+  --grad-blue: #0052cc;
+
+  /* Spacing */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Fonts */
+  --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.25);
+  --shadow-card: 0 4px 12px rgba(9, 30, 66, 0.08);
+  /* Soft shadow */
+  --shadow-hover: 0 8px 16px rgba(9, 30, 66, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Header style for the blue top bar effect */
+.app-header {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s;
+  border: none;
+  /* No borders in this clean theme */
+}
+
+/* Utility Classes */
+.text-danger {
+  color: var(--color-danger) !important;
+  text-shadow: none;
+}
+
+.text-success {
+  color: var(--color-success) !important;
+  text-shadow: none;
+}
+
+.text-warning {
+  color: var(--color-warning) !important;
+}
+
+.text-info {
+  color: var(--color-info) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-white {
+  color: var(--text-white) !important;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: background-color 0.2s;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  transform: none;
+}
+
+.btn-danger {
+  background-color: rgba(255, 86, 48, 0.1);
+  color: var(--color-danger);
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: rgba(255, 86, 48, 0.2);
+  box-shadow: none;
+}
+
+/* Inputs */
+.input {
+  background: #f4f5f7;
+  /* Very light gray */
+  border: 2px solid #dfe1e6;
+  color: var(--text-primary);
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-md);
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--color-primary);
+}
+
+option {
+  background-color: white;
+  color: var(--text-primary);
+}
+
+/* Grid Utilities */
+.grid-cols-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+}
+
+.col-span-12 {
+  grid-column: span 12;
+}
+
+.col-span-8 {
+  grid-column: span 8;
+}
+
+.col-span-6 {
+  grid-column: span 6;
+}
+
+.col-span-4 {
+  grid-column: span 4;
+}
+
+@media (max-width: 1024px) {
+
+  .lg\:col-span-8,
+  .lg\:col-span-4 {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .md\:col-span-6 {
+    grid-column: span 12;
+  }
+}
