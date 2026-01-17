@@ -1,4 +1,4 @@
-import { FinanceProvider } from './context/FinanceContext'
+import { FinanceProvider, useFinance } from './context/FinanceContext'
 import { Dashboard } from './components/Dashboard'
 import { Modal } from './components/ui/Modal'
 import { TransactionForm } from './components/forms/TransactionForm'
