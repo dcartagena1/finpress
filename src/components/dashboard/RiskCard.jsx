@@ -15,7 +15,7 @@ export const RiskCard = () => {
             ) : (
                 <div className="flex-col" style={{ gap: '1rem' }}>
                     {risks.map(risk => (
-                        <div key={risk.id} className="flex-between" style={{ paddingBottom: '0.5rem', borderBottom: '1px solid #eee' }}>
+                        <div key={risk.id} className="flex-between" style={{ paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                             <div className="flex-col">
                                 <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>{risk.description}</span>
                                 <span className="text-danger" style={{ fontSize: '0.85rem' }}>Vencido: {risk.date}</span>

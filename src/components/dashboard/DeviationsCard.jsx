@@ -30,17 +30,18 @@ export const DeviationsCard = () => {
                 ) : (
                     deviations.map((d, index) => (
                         <div key={d.id} className="flex-between" style={{
-                            background: 'white',
+                            background: 'rgba(255,255,255,0.03)',
                             padding: '0.75rem',
-                            borderBottom: '1px solid #eee'
+                            borderRadius: 'var(--radius-md)',
+                            border: '1px solid rgba(255,255,255,0.05)'
                         }}>
                             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                                <div style={{ background: '#ffebe6', padding: '0.25rem', borderRadius: '4px' }}>
+                                <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '0.4rem', borderRadius: '8px' }}>
                                     <TrendingDown size={16} className="text-danger" />
                                 </div>
                                 <div className="flex-col">
                                     <span style={{ fontWeight: 500, fontSize: '0.9rem' }}>{d.description}</span>
-                                    <span className="text-muted" style={{ fontSize: '0.75rem' }}>Sobre presupuesto</span>
+                                    <span className="text-secondary" style={{ fontSize: '0.75rem' }}>Sobre presupuesto</span>
                                 </div>
                             </div>
                             <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{formatCurrency(d.amount)}</span>

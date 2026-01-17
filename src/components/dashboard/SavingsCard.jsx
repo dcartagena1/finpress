@@ -66,8 +66,8 @@ export const SavingsCard = () => {
                             <div key={g.id} style={{
                                 padding: '1rem',
                                 borderRadius: 'var(--radius-md)',
-                                border: '1px solid #eee',
-                                boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
+                                background: 'rgba(255,255,255,0.03)',
+                                border: '1px solid rgba(255,255,255,0.05)'
                             }}>
                                 <div className="flex-between" style={{ marginBottom: '0.5rem' }}>
                                     <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{g.name}</span>
