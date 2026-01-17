@@ -40,7 +40,7 @@ const seedData = () => {
 };
 
 // ... existing imports ...
-import { Download, Upload, Settings } from 'lucide-react'
+// (Removed duplicate import of Download, Upload, Settings)
 
 // ... seedData ...
 
