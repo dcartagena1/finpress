@@ -3,6 +3,7 @@ import { RiskCard } from './dashboard/RiskCard';
 import { SavingsCard } from './dashboard/SavingsCard';
 import { BudgetCard } from './dashboard/BudgetCard';
 import { DeviationsCard } from './dashboard/DeviationsCard';
+import { ProjectionCard } from './dashboard/ProjectionCard';
 
 export const Dashboard = () => {
     return (
@@ -16,16 +17,17 @@ export const Dashboard = () => {
                 <LiquidityCard />
             </div>
 
-            {/* Left Column (Alerts & Deviations) */}
-            <div className="col-span-12 md:col-span-6 flex-col" style={{ gap: '1.5rem' }}>
-                <RiskCard />
-                <DeviationsCard />
+            {/* Main Content Area (Left 8 cols) */}
+            <div className="col-span-12 lg:col-span-8 flex-col" style={{ gap: '1.5rem' }}>
+                <ProjectionCard />
                 <BudgetCard />
             </div>
 
-            {/* Right Column (Goals) */}
-            <div className="col-span-12 md:col-span-6">
+            {/* Sidebar (Right 4 cols) */}
+            <div className="col-span-12 lg:col-span-4 flex-col" style={{ gap: '1.5rem' }}>
+                <RiskCard />
                 <SavingsCard />
+                <DeviationsCard />
             </div>
         </div>
     );

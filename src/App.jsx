@@ -62,6 +62,25 @@ function AppContent() {
           <p className="text-secondary" style={{ fontSize: '0.9rem', marginLeft: '3.5rem' }}>Active Financial Pressure</p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          {/* Backup Controls */}
+          <div style={{ marginRight: '1rem', display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={exportData}
+              className="flex-center"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', width: '36px', height: '36px', borderRadius: '8px' }}
+              title="Exportar Respaldo"
+            >
+              <Download size={18} />
+            </button>
+            <button
+              onClick={handleImportClick}
+              className="flex-center"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', width: '36px', height: '36px', borderRadius: '8px' }}
+              title="Importar Respaldo"
+            >
+              <Upload size={18} />
+            </button>
+          </div>
           <button className="btn btn-secondary" onClick={() => setIsHistoryOpen(true)}>
             Movimientos
           </button>
