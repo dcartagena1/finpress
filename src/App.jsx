@@ -2,6 +2,7 @@ import { FinanceProvider } from './context/FinanceContext'
 import { Dashboard } from './components/Dashboard'
 import { Modal } from './components/ui/Modal'
 import { TransactionForm } from './components/forms/TransactionForm'
+import { TransactionHistory } from './components/TransactionHistory'
 import { useState } from 'react'
 import { format } from 'date-fns'
 
@@ -40,33 +41,42 @@ const seedData = () => {
 function AppContent() {
   const [isIncomeOpen, setIsIncomeOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
+
+  const handleEdit = (transaction) => {
+    setEditingTransaction(transaction);
+    setIsHistoryOpen(false); // Close history to show edit form
+  };
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
       <header className="app-header">
         <div>
-          <h1 style={{ fontSize: '1.25rem', marginBottom: '0', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }} onClick={seedData} title="Click para Demo">
-            <span style={{ opacity: 0.8 }}>☰</span> Panel Financiero
+          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', letterSpacing: '-0.02em' }} onClick={seedData} title="Click para Demo">
+            <div style={{ width: '32px', height: '32px', background: 'var(--grad-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>F</span>
+            </div>
+            FinPress
           </h1>
+          <p className="text-secondary" style={{ fontSize: '0.9rem', marginLeft: '3.5rem' }}>Active Financial Pressure</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <button className="btn btn-secondary" onClick={() => setIsHistoryOpen(true)}>
+            Movimientos
+          </button>
           <button
-            className="btn"
-            style={{ backgroundColor: 'white', color: 'var(--color-primary)', fontWeight: 'bold' }}
+            className="btn btn-primary"
             onClick={() => setIsIncomeOpen(true)}
           >
             + Ingreso
           </button>
           <button
-            className="btn"
-            style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'white', border: '1px solid rgba(255,255,255,0.4)' }}
+            className="btn btn-secondary"
             onClick={() => setIsExpenseOpen(true)}
           >
             + Gasto
           </button>
-          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-primary)', fontWeight: 'bold' }}>
-            D
-          </div>
         </div>
       </header>
 
@@ -88,6 +98,28 @@ function AppContent() {
         title="Registrar Gasto"
       >
         <TransactionForm type="EXPENSE" onSuccess={() => setIsExpenseOpen(false)} />
+      </Modal>
+
+      <Modal
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        title="Historial de Movimientos"
+      >
+        <TransactionHistory onEdit={handleEdit} />
+      </Modal>
+
+      <Modal
+        isOpen={!!editingTransaction}
+        onClose={() => setEditingTransaction(null)}
+        title="Editar Movimiento"
+      >
+        {editingTransaction && (
+          <TransactionForm
+            initialData={editingTransaction}
+            type={editingTransaction.type}
+            onSuccess={() => setEditingTransaction(null)}
+          />
+        )}
       </Modal>
     </div>
   );

@@ -2,27 +2,31 @@ import { useState } from 'react';
 import { useFinance } from '../../context/FinanceContext';
 import { format } from 'date-fns';
 
-export const TransactionForm = ({ type, onSuccess }) => {
-    const { addTransaction, categories } = useFinance();
+export const TransactionForm = ({ type, onSuccess, initialData }) => {
+    const { addTransaction, updateTransaction, categories, addCategory } = useFinance();
     const [formData, setFormData] = useState({
-        amount: '',
-        description: '',
-        categoryId: '',
-        date: format(new Date(), 'yyyy-MM-dd'),
-        isRecurring: false,
-        confirmed: true // Default to confirmed if it's today/past? Or force user to choose? 
-        // "Nada se marca como pagado automáticamente" - usually means for recurrent occurrences. 
-        // manual entry is usually confirmed unless user says otherwise.
+        amount: initialData?.amount || '',
+        description: initialData?.description || '',
+        categoryId: initialData?.categoryId || '',
+        date: initialData ? initialData.date : format(new Date(), 'yyyy-MM-dd'),
+        isRecurring: initialData?.isRecurring || false,
+        confirmed: initialData ? initialData.confirmed : true
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addTransaction({
+        const data = {
             ...formData,
             amount: Number(formData.amount),
-            type: type, // 'INCOME' or 'EXPENSE' passed from prop
-            confirmed: formData.confirmed // explicit
-        });
+            type: type || initialData.type, // Use prop type or existing type
+            confirmed: formData.confirmed
+        };
+
+        if (initialData) {
+            updateTransaction(initialData.id, data);
+        } else {
+            addTransaction(data);
+        }
         onSuccess();
     };
 
@@ -57,17 +61,30 @@ export const TransactionForm = ({ type, onSuccess }) => {
 
             <div>
                 <label className="text-secondary" style={{ fontSize: '0.875rem' }}>Categoría</label>
-                <select
-                    className="input"
-                    value={formData.categoryId}
-                    onChange={e => setFormData({ ...formData, categoryId: e.target.value })}
-                    required
-                >
-                    <option value="">Seleccionar...</option>
-                    {filteredCategories.map(c => (
-                        <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                </select>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <select
+                        className="input"
+                        value={formData.categoryId}
+                        onChange={e => {
+                            if (e.target.value === 'NEW') {
+                                const name = prompt('Nombre de la nueva categoría:');
+                                if (name) {
+                                    const newId = addCategory(name, type);
+                                    setFormData({ ...formData, categoryId: newId });
+                                }
+                            } else {
+                                setFormData({ ...formData, categoryId: e.target.value });
+                            }
+                        }}
+                        required
+                    >
+                        <option value="">Seleccionar...</option>
+                        {filteredCategories.map(c => (
+                            <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                        <option value="NEW" style={{ fontWeight: 'bold', color: 'var(--color-primary)' }}>+ Crear Nueva...</option>
+                    </select>
+                </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -116,7 +133,7 @@ export const TransactionForm = ({ type, onSuccess }) => {
             </div>
 
             <button className="btn btn-primary" type="submit" style={{ marginTop: '0.5rem' }}>
-                Guardar {type === 'INCOME' ? 'Ingreso' : 'Gasto'}
+                {initialData ? 'Actualizar' : 'Guardar'} {type === 'INCOME' ? 'Ingreso' : 'Gasto'}
             </button>
         </form>
     );

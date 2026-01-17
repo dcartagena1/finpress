@@ -59,6 +59,15 @@ export const FinanceProvider = ({ children }) => {
         }));
     };
 
+    const addCategory = (name, type) => {
+        const id = 'c-' + Date.now();
+        setData(prev => ({
+            ...prev,
+            categories: [...prev.categories, { id, name, type }]
+        }));
+        return id;
+    };
+
     const updateGoal = (id, updates) => {
         setData(prev => ({
             ...prev,
@@ -81,7 +90,8 @@ export const FinanceProvider = ({ children }) => {
             updateTransaction,
             deleteTransaction,
             addGoal,
-            updateGoal
+            updateGoal,
+            addCategory
         }}>
             {children}
         </FinanceContext.Provider>

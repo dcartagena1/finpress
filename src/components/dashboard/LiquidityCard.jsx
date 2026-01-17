@@ -7,35 +7,36 @@ export const LiquidityCard = () => {
     const { availableBalance, pendingCommitments, reservedForGoals } = stats;
 
     return (
-        <GlowingCard style={{ padding: 0, overflow: 'hidden', background: 'transparent', boxShadow: 'none' }}>
-            {/* Blue Hero Banner */}
-            <div style={{
-                background: 'linear-gradient(90deg, #003366 0%, #0052cc 100%)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '2rem',
-                color: 'white',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                boxShadow: 'var(--shadow-card)'
-            }}>
+        <GlowingCard className="col-span-12" style={{
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)',
+            position: 'relative',
+            overflow: 'hidden'
+        }}>
+            {/* Decorative ambient glow */}
+            <div style={{ position: 'absolute', top: -100, left: '20%', width: 300, height: 300, background: 'var(--color-primary-glow)', filter: 'blur(100px)', opacity: 0.2 }}></div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
                 <div className="flex-col">
-                    <span style={{ fontSize: '0.9rem', opacity: 0.9 }}>Liquidez del mes</span>
-                    <span style={{ fontSize: '2.5rem', fontWeight: 700 }}>{formatCurrency(availableBalance)}</span>
-                </div>
-
-                <div className="flex-col" style={{ borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '2rem' }}>
-                    <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>Riesgo Activo</span>
-                    <span style={{ fontSize: '1.25rem', fontWeight: 600, color: '#ffbdad' }}>
-                        {formatCurrency(pendingCommitments)}
+                    <span className="text-secondary" style={{ fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Liquidez Disponible</span>
+                    <span style={{ fontSize: '3.5rem', fontWeight: 700, letterSpacing: '-0.02em', background: 'linear-gradient(to right, #fff, #bbb)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                        {formatCurrency(availableBalance)}
                     </span>
                 </div>
 
-                <div className="flex-col" style={{ borderLeft: '1px solid rgba(255,255,255,0.2)', paddingLeft: '2rem' }}>
-                    <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>Reserva Ahorro</span>
-                    <span style={{ fontSize: '1.25rem', fontWeight: 600, color: '#b3d4ff' }}>
-                        {formatCurrency(reservedForGoals)}
-                    </span>
+                <div style={{ display: 'flex', gap: '3rem' }}>
+                    <div className="flex-col" style={{ alignItems: 'flex-end' }}>
+                        <span className="text-secondary" style={{ fontSize: '0.8rem' }}>Riesgo Activo</span>
+                        <span style={{ fontSize: '1.25rem', fontWeight: 500, color: 'var(--color-danger)' }}>
+                            {formatCurrency(pendingCommitments)}
+                        </span>
+                    </div>
+
+                    <div className="flex-col" style={{ alignItems: 'flex-end' }}>
+                        <span className="text-secondary" style={{ fontSize: '0.8rem' }}>Reserva Metas</span>
+                        <span style={{ fontSize: '1.25rem', fontWeight: 500, color: 'var(--color-primary)' }}>
+                            {formatCurrency(reservedForGoals)}
+                        </span>
+                    </div>
                 </div>
             </div>
         </GlowingCard>

@@ -28,7 +28,7 @@ export const TransactionHistory = ({ onEdit }) => {
     return (
         <div className="flex-col" style={{ gap: '1.5rem' }}>
             {/* Controls */}
-            <div className="flex-between" style={{ background: 'white', padding: '1rem', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+            <div className="flex-between" style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: 'var(--radius-lg)', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <div className="flex-center" style={{ gap: '0.5rem' }}>
                     <Calendar size={20} className="text-secondary" />
                     <span style={{ fontWeight: 500 }}>Periodo:</span>
@@ -50,12 +50,16 @@ export const TransactionHistory = ({ onEdit }) => {
                     </div>
                 ) : (
                     filteredTransactions.map(t => (
-                        <div key={t.id} className="card flex-between" style={{ padding: '1rem', borderLeft: `4px solid ${t.type === 'INCOME' ? 'var(--color-success)' : 'var(--color-danger)'}` }}>
+                        <div key={t.id} className="card flex-between" style={{
+                            padding: '1rem',
+                            background: 'rgba(255,255,255,0.02)',
+                            borderLeft: `4px solid ${t.type === 'INCOME' ? 'var(--color-success)' : 'var(--color-danger)'}`
+                        }}>
                             <div className="flex-col">
                                 <span style={{ fontWeight: 600, fontSize: '1rem' }}>{t.description}</span>
                                 <div className="flex-center" style={{ gap: '0.5rem', fontSize: '0.85rem' }}>
                                     <span className="text-secondary">{format(parseISO(t.date), 'dd/MM/yyyy')}</span>
-                                    <span style={{ color: '#ddd' }}>|</span>
+                                    <span style={{ color: '#444' }}>|</span>
                                     <span className="text-secondary">{getCategoryName(t.categoryId)}</span>
                                     {!t.confirmed && <span className="text-danger" style={{ fontWeight: 'bold' }}> (Pendiente)</span>}
                                 </div>
@@ -70,10 +74,10 @@ export const TransactionHistory = ({ onEdit }) => {
                                     {t.type === 'INCOME' ? '+' : '-'}{formatCurrency(t.amount)}
                                 </span>
                                 <div className="flex-center" style={{ gap: '0.5rem' }}>
-                                    <button onClick={() => onEdit(t)} style={{ padding: '0.5rem', background: '#f4f5f7', borderRadius: '4px', color: 'var(--text-secondary)' }}>
+                                    <button onClick={() => onEdit(t)} style={{ padding: '0.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', color: 'var(--text-secondary)' }}>
                                         <Edit2 size={16} />
                                     </button>
-                                    <button onClick={() => handleDelete(t.id)} style={{ padding: '0.5rem', background: '#ffebe6', borderRadius: '4px', color: 'var(--color-danger)' }}>
+                                    <button onClick={() => handleDelete(t.id)} style={{ padding: '0.5rem', background: 'rgba(239,68,68,0.1)', borderRadius: '4px', color: 'var(--color-danger)' }}>
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
