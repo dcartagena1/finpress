@@ -3,8 +3,9 @@ import { Dashboard } from './components/Dashboard'
 import { Modal } from './components/ui/Modal'
 import { TransactionForm } from './components/forms/TransactionForm'
 import { TransactionHistory } from './components/TransactionHistory'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { format } from 'date-fns'
+import { Download, Upload } from 'lucide-react'
 
 const seedData = () => {
   if (confirm('¿Cargar datos de prueba? Esto borrará tus datos actuales.')) {
@@ -38,19 +39,49 @@ const seedData = () => {
   }
 };
 
+// ... existing imports ...
+import { Download, Upload, Settings } from 'lucide-react'
+
+// ... seedData ...
+
 function AppContent() {
+  const financeData = useFinance() || {}; // Safety fallback
+  const { exportData = () => { }, importData = () => { } } = financeData;
+
   const [isIncomeOpen, setIsIncomeOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleEdit = (transaction) => {
     setEditingTransaction(transaction);
-    setIsHistoryOpen(false); // Close history to show edit form
+    setIsHistoryOpen(false);
+  };
+
+  const handleImportClick = () => {
+    if (confirm('IMPORTANTE: Al importar se reemplazarán todos tus datos actuales. ¿Deseas continuar?')) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      importData(file);
+    }
   };
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        accept=".json"
+        onChange={handleFileChange}
+      />
+
       <header className="app-header">
         <div>
           <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', letterSpacing: '-0.02em' }} onClick={seedData} title="Click para Demo">
