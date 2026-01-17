@@ -82,51 +82,83 @@ function AppContent() {
         onChange={handleFileChange}
       />
 
-      <header className="app-header">
-        <div>
-          <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', letterSpacing: '-0.02em' }} onClick={seedData} title="Click para Demo">
-            <div style={{ width: '32px', height: '32px', background: 'var(--grad-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>F</span>
-            </div>
+      <header className="app-header" style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '2rem',
+        padding: '1rem 0',
+        borderBottom: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            background: 'var(--grad-primary)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 0 15px rgba(59, 130, 246, 0.3)'
+          }}>
+            <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>F</span>
+          </div>
+          <h1 style={{
+            fontSize: '1.5rem',
+            fontWeight: '600',
+            color: 'var(--text-primary)',
+            letterSpacing: '-0.02em',
+            margin: 0
+          }}>
             FinPress
           </h1>
-          <p className="text-secondary" style={{ fontSize: '0.9rem', marginLeft: '3.5rem' }}>Active Financial Pressure</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          {/* Backup Controls */}
-          <div style={{ marginRight: '1rem', display: 'flex', gap: '0.5rem' }}>
+
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          {/* Utility Group */}
+          <div style={{ display: 'flex', gap: '0.5rem', paddingRight: '1rem', borderRight: '1px solid rgba(255,255,255,0.1)' }}>
             <button
               onClick={exportData}
-              className="flex-center"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', width: '36px', height: '36px', borderRadius: '8px' }}
+              className="flex-center icon-btn"
               title="Exportar Respaldo"
+              style={{ color: 'var(--text-secondary)', padding: '0.5rem' }}
             >
-              <Download size={18} />
+              <Download size={20} />
             </button>
             <button
               onClick={handleImportClick}
-              className="flex-center"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)', width: '36px', height: '36px', borderRadius: '8px' }}
+              className="flex-center icon-btn"
               title="Importar Respaldo"
+              style={{ color: 'var(--text-secondary)', padding: '0.5rem' }}
             >
-              <Upload size={18} />
+              <Upload size={20} />
             </button>
           </div>
-          <button className="btn btn-secondary" onClick={() => setIsHistoryOpen(true)}>
-            Movimientos
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => setIsIncomeOpen(true)}
-          >
-            + Ingreso
-          </button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => setIsExpenseOpen(true)}
-          >
-            + Gasto
-          </button>
+
+          {/* Action Group */}
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setIsHistoryOpen(true)}
+              style={{ height: '40px', padding: '0 1.25rem' }}
+            >
+              Movimientos
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setIsIncomeOpen(true)}
+              style={{ height: '40px', padding: '0 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <span>+</span> Ingreso
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setIsExpenseOpen(true)}
+              style={{ height: '40px', padding: '0 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderColor: 'rgba(239, 68, 68, 0.3)', color: '#f87171' }}
+            >
+              <span>+</span> Gasto
+            </button>
+          </div>
         </div>
       </header>
 
