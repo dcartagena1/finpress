@@ -56,6 +56,36 @@ export const FinanceProvider = ({ children }) => {
 
 
 
+    const exportData = () => {
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `finpress_backup_${format(new Date(), 'yyyy-MM-dd')}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const importData = (file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                // Basic Validation
+                if (parsed.transactions && parsed.categories && parsed.goals) {
+                    setData(parsed);
+                    alert('¡Datos restaurados exitosamente!');
+                } else {
+                    alert('Error: El archivo no es válido.');
+                }
+            } catch (err) {
+                alert('Error al leer el archivo.');
+            }
+        };
+        reader.readAsText(file);
+    };
+
     const addGoal = (goal) => {
         setData(prev => ({
             ...prev,
