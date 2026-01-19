@@ -66,17 +66,17 @@ export const BudgetCard = () => {
             </div>
 
             <div className="flex-between" style={{ marginBottom: '2rem' }}>
-                <div className="flex-col">
+                <div className="flex-col" style={{ minWidth: 0 }}>
                     <span className="text-secondary" style={{ fontSize: '0.75rem' }}>Ingresos</span>
-                    <span style={{ fontWeight: 600, color: 'var(--color-success)', fontSize: '1.2rem' }}>{formatCurrency(income)}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--color-success)', fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{formatCompactCurrency(income)}</span>
                 </div>
-                <div className="flex-col">
+                <div className="flex-col" style={{ minWidth: 0 }}>
                     <span className="text-secondary" style={{ fontSize: '0.75rem' }}>Gastos</span>
-                    <span style={{ fontWeight: 600, color: 'var(--color-danger)', fontSize: '1.2rem' }}>{formatCurrency(expense)}</span>
+                    <span style={{ fontWeight: 600, color: 'var(--color-danger)', fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{formatCompactCurrency(expense)}</span>
                 </div>
-                <div className="flex-col">
+                <div className="flex-col" style={{ minWidth: 0 }}>
                     <span className="text-secondary" style={{ fontSize: '0.75rem' }}>Neto</span>
-                    <span style={{ fontWeight: 600, color: income - expense > 0 ? 'var(--color-primary)' : 'var(--text-primary)', fontSize: '1.2rem' }}>{income - expense > 0 ? '+' : ''}{formatCurrency(income - expense)}</span>
+                    <span style={{ fontWeight: 600, color: income - expense > 0 ? 'var(--color-primary)' : 'var(--text-primary)', fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{income - expense > 0 ? '+' : ''}{formatCompactCurrency(income - expense)}</span>
                 </div>
             </div>
 

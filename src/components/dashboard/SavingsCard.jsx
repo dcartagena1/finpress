@@ -78,14 +78,18 @@ export const SavingsCard = () => {
                                     <div style={{ width: `${progress}%`, background: 'var(--color-primary)', height: '100%', borderRadius: '4px' }}></div>
                                 </div>
 
-                                <div className="flex-between">
-                                    <div className="flex-col">
+                                <div className="flex-between" style={{ gap: '0.5rem' }}>
+                                    <div className="flex-col" style={{ minWidth: 0 }}>
                                         <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>{Math.round(progress)}%</span>
-                                        <span className="text-muted" style={{ fontSize: '0.75rem' }}>{formatCurrency(g.accumulated)} / {formatCurrency(g.targetAmount)}</span>
+                                        <span className="text-muted" style={{ fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {formatCompactCurrency(g.accumulated)} / {formatCompactCurrency(g.targetAmount)}
+                                        </span>
                                     </div>
-                                    <div className="flex-col" style={{ alignItems: 'flex-end' }}>
-                                        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)' }}>{formatCurrency(g.targetAmount - g.accumulated)}</span>
-                                        <span className="text-muted" style={{ fontSize: '0.75rem' }}>Faltan meses...</span>
+                                    <div className="flex-col" style={{ alignItems: 'flex-end', minWidth: 0 }}>
+                                        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>
+                                            {formatCompactCurrency(g.targetAmount - g.accumulated)}
+                                        </span>
+                                        <span className="text-muted" style={{ fontSize: '0.75rem' }}>Restante</span>
                                     </div>
                                 </div>
 

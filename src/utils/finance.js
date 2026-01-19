@@ -76,5 +76,21 @@ export const detectRisks = (transactions, currentDate = new Date()) => {
 };
 
 export const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
+    return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        maximumFractionDigits: 0
+    }).format(amount);
+};
+
+export const formatCompactCurrency = (amount) => {
+    if (Math.abs(amount) < 1000000) return formatCurrency(amount);
+
+    return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 1
+    }).format(amount);
 };

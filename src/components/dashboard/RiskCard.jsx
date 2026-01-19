@@ -20,8 +20,8 @@ export const RiskCard = () => {
                                 <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>{risk.description}</span>
                                 <span className="text-danger" style={{ fontSize: '0.85rem' }}>Vencido: {risk.date}</span>
                             </div>
-                            <div className="flex-center" style={{ gap: '1rem' }}>
-                                <span style={{ fontWeight: 600 }}>{formatCurrency(risk.amount)}</span>
+                            <div className="flex-center" style={{ gap: '1rem', minWidth: 0 }}>
+                                <span style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatCompactCurrency(risk.amount)}</span>
                                 <button className="flex-center" style={{ width: '24px', height: '24px', background: '#ffebe6', color: '#ff5630', borderRadius: '4px' }}>
                                     <X size={14} />
                                 </button>
