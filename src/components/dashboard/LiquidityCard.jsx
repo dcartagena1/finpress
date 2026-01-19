@@ -15,37 +15,42 @@ export const LiquidityCard = () => {
             {/* Decorative ambient glow */}
             <div style={{ position: 'absolute', top: -100, left: '20%', width: 300, height: 300, background: 'var(--color-primary-glow)', filter: 'blur(100px)', opacity: 0.2 }}></div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-                <div className="flex-col" style={{ flex: 1, minWidth: 0 }}>
-                    <span className="text-secondary" style={{ fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Liquidez Disponible</span>
+            <div className="flex-col" style={{ gap: '1.5rem', position: 'relative', zIndex: 1 }}>
+                {/* Top Section: Main Balance */}
+                <div className="flex-col">
+                    <span className="text-secondary" style={{ fontSize: '0.8rem', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Liquidez Disponible</span>
                     <span style={{
-                        fontSize: 'clamp(1.75rem, 8vw, 3.5rem)',
+                        fontSize: 'clamp(2.5rem, 12vw, 4rem)',
                         fontWeight: 700,
-                        letterSpacing: '-0.02em',
+                        letterSpacing: '-0.03em',
                         background: 'linear-gradient(to right, #fff, #bbb)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: 'block'
-                    }} title={availableBalance.toLocaleString('es-CL')}>
+                        lineHeight: 1
+                    }}>
                         {availableBalance > 999999999 ? formatCompactCurrency(availableBalance) : formatCurrency(availableBalance)}
                     </span>
                 </div>
 
-                <div style={{ display: 'flex', gap: 'min(3rem, 5vw)', flexShrink: 0 }}>
-                    <div className="flex-col" style={{ alignItems: 'flex-end' }}>
-                        <span className="text-secondary" style={{ fontSize: '0.8rem' }}>Riesgo Activo</span>
-                        <span style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 500, color: 'var(--color-danger)' }}>
-                            {formatCompactCurrency(pendingCommitments)}
+                {/* Bottom Section: Secondary Metrics */}
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '1rem',
+                    paddingTop: '1.25rem',
+                    borderTop: '1px solid rgba(255,255,255,0.08)'
+                }}>
+                    <div className="flex-col">
+                        <span className="text-secondary" style={{ fontSize: '0.75rem', marginBottom: '0.25rem' }}>Riesgo Activo</span>
+                        <span style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-danger)' }}>
+                            {formatCurrency(pendingCommitments)}
                         </span>
                     </div>
 
-                    <div className="flex-col" style={{ alignItems: 'flex-end' }}>
-                        <span className="text-secondary" style={{ fontSize: '0.8rem' }}>Reserva Metas</span>
-                        <span style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 500, color: 'var(--color-primary)' }}>
-                            {formatCompactCurrency(reservedForGoals)}
+                    <div className="flex-col">
+                        <span className="text-secondary" style={{ fontSize: '0.75rem', marginBottom: '0.25rem' }}>Reserva Metas</span>
+                        <span style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-primary)' }}>
+                            {formatCurrency(reservedForGoals)}
                         </span>
                     </div>
                 </div>
