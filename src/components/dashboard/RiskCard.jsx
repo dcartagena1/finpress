@@ -1,5 +1,5 @@
 import { useFinance } from '../../context/FinanceContext';
-import { formatCurrency } from '../../utils/finance';
+import { formatCurrency, formatCompactCurrency } from '../../utils/finance';
 import { GlowingCard } from '../ui/GlowingCard';
 import { X } from 'lucide-react';
 

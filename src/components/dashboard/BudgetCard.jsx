@@ -1,5 +1,5 @@
 import { useFinance } from '../../context/FinanceContext';
-import { formatCurrency } from '../../utils/finance';
+import { formatCurrency, formatCompactCurrency } from '../../utils/finance';
 import { startOfMonth, endOfMonth, parseISO, isWithinInterval, format } from 'date-fns';
 import { GlowingCard } from '../ui/GlowingCard';
 import { useState, useMemo } from 'react';

@@ -1,5 +1,5 @@
 import { useFinance } from '../../context/FinanceContext';
-import { formatCurrency } from '../../utils/finance';
+import { formatCurrency, formatCompactCurrency } from '../../utils/finance';
 import { Plus, Target, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '../ui/Modal';
