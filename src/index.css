@@ -54,8 +54,16 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
+  width: 100%;
+}
+
+body {
   background-color: var(--bg-app);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -90,7 +98,8 @@ button {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
+  overflow-x: hidden;
 }
 
 /* Glass Card */
@@ -238,4 +247,81 @@ option {
   .lg\:col-span-8 {
     grid-column: span 8;
   }
+}
+
+/* RESPONSIVE UTILITIES */
+.mobile-only {
+  display: flex !important;
+}
+
+.desktop-only {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none !important;
+  }
+
+  .desktop-only {
+    display: flex !important;
+  }
+}
+
+/* FIXED BOTTOM NAV FOR MOBILE */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(10, 11, 20, 0.85);
+  /* Darker backdrop for mobile clarity */
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px;
+  transition: color 0.2s;
+}
+
+.nav-item:active {
+  color: var(--text-primary);
+  transform: scale(0.95);
+}
+
+.nav-item.active {
+  color: var(--color-primary);
+}
+
+.fab-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  margin-top: -30px;
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: 4px solid var(--bg-app);
+}
+
+.fab-btn:active {
+  transform: scale(0.9);
 }
