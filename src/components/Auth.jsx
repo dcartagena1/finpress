@@ -23,9 +23,15 @@ export function Auth() {
     const [webAuthnSupported, setWebAuthnSupported] = useState(false)
 
     useEffect(() => {
-        // Check if browser supports WebAuthn
+        // 1. Check if browser supports WebAuthn
         if (window.PublicKeyCredential) {
             setWebAuthnSupported(true)
+        }
+
+        // 2. Detect recovery flow (Forgot Password link)
+        const hash = window.location.hash;
+        if (hash && hash.includes('type=recovery')) {
+            setView('UPDATE_PASSWORD');
         }
     }, [])
 
@@ -50,10 +56,15 @@ export function Auth() {
                 if (result.error) throw result.error
             } else if (view === 'FORGOT_PASSWORD') {
                 result = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/reset-password',
+                    redirectTo: window.location.origin, // Redirect back to app to handle hash
                 })
                 if (result.error) throw result.error
                 setMessage({ text: 'Se ha enviado un correo para restablecer tu contraseña.', type: 'success' })
+            } else if (view === 'UPDATE_PASSWORD') {
+                result = await supabase.auth.updateUser({ password })
+                if (result.error) throw result.error
+                setMessage({ text: '¡Contraseña actualizada! Ya puedes iniciar sesión.', type: 'success' })
+                setTimeout(() => setView('LOGIN'), 2000)
             }
         } catch (error) {
             setMessage({ text: translateError(error.message), type: 'error' })
@@ -113,26 +124,28 @@ export function Auth() {
                         <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>F</span>
                     </div>
                     <h1 style={{ fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '0.5rem' }}>
-                        {view === 'REGISTER' ? 'Crear Cuenta' : view === 'FORGOT_PASSWORD' ? 'Recuperar Clave' : 'FinPress'}
+                        {view === 'REGISTER' ? 'Crear Cuenta' : view === 'FORGOT_PASSWORD' ? 'Recuperar Clave' : view === 'UPDATE_PASSWORD' ? 'Nueva Contraseña' : 'FinPress'}
                     </h1>
                     <p className="text-secondary" style={{ fontSize: '0.95rem' }}>
-                        {view === 'REGISTER' ? 'Comienza tu control financiero' : view === 'FORGOT_PASSWORD' ? 'Ingresa tu correo para continuar' : 'Tu bóveda financiera personal'}
+                        {view === 'REGISTER' ? 'Comienza tu control financiero' : view === 'FORGOT_PASSWORD' ? 'Ingresa tu correo para continuar' : view === 'UPDATE_PASSWORD' ? 'Ingresa tu nueva clave segura' : 'Tu bóveda financiera personal'}
                     </p>
                 </div>
 
                 <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div className="input-group" style={{ position: 'relative' }}>
-                        <Mail size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-                        <input
-                            className="input-field"
-                            type="email"
-                            placeholder="Correo electrónico"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            style={{ width: '100%', paddingLeft: '48px', height: '50px', fontSize: '1rem' }}
-                        />
-                    </div>
+                    {view !== 'UPDATE_PASSWORD' && (
+                        <div className="input-group" style={{ position: 'relative' }}>
+                            <Mail size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                            <input
+                                className="input-field"
+                                type="email"
+                                placeholder="Correo electrónico"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                style={{ width: '100%', paddingLeft: '48px', height: '50px', fontSize: '1rem' }}
+                            />
+                        </div>
+                    )}
 
                     {view !== 'FORGOT_PASSWORD' && (
                         <div className="input-group" style={{ position: 'relative' }}>
@@ -152,7 +165,7 @@ export function Auth() {
 
                     <button className="btn btn-primary flex-center" disabled={isLoading} style={{ justifyContent: 'center', height: '50px', marginTop: '0.5rem', fontSize: '1rem', fontWeight: '600' }}>
                         {isLoading ? <Loader2 className="animate-spin" /> : (
-                            view === 'REGISTER' ? 'Registrarse' : view === 'FORGOT_PASSWORD' ? 'Enviar Correo' : 'Iniciar Sesión'
+                            view === 'REGISTER' ? 'Registrarse' : view === 'FORGOT_PASSWORD' ? 'Enviar Correo' : view === 'UPDATE_PASSWORD' ? 'Actualizar' : 'Iniciar Sesión'
                         )}
                     </button>
                 </form>

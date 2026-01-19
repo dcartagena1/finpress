@@ -182,6 +182,13 @@ function AppContent({ session }) {
         </button>
       </nav>
 
+      {/* Version Audit Footer */}
+      <footer style={{ marginTop: '3rem', padding: '2rem 0', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <p className="text-muted" style={{ fontSize: '0.7rem' }}>
+          FinPress v1.5.0-cloud • Build: {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}
+        </p>
+      </footer>
+
       {/* Modals */}
       <Modal isOpen={isIncomeOpen} onClose={() => setIsIncomeOpen(false)} title="Registrar Ingreso">
         <TransactionForm type="INCOME" onSuccess={() => setIsIncomeOpen(false)} />

@@ -22,41 +22,47 @@ export const FinanceProvider = ({ children, session }) => {
     const [categories, setCategories] = useState(INITIAL_CATEGORIES);
     const [loading, setLoading] = useState(true);
 
-    // Fetch initial data
+    // Fetch initial data & Listen for changes
     useEffect(() => {
         if (!session?.user) return;
 
         const fetchData = async () => {
             setLoading(true);
 
-            // Fetch Transactions
-            const { data: txs, error: txError } = await supabase
-                .from('transactions')
-                .select('*')
-                .order('date', { ascending: false });
-
-            // Fetch Goals
-            const { data: gls, error: glError } = await supabase
-                .from('goals')
-                .select('*');
-
-            // Fetch Custom Categories (if any)
-            const { data: cats, error: catError } = await supabase
-                .from('categories')
-                .select('*');
+            const { data: txs } = await supabase.from('transactions').select('*').order('date', { ascending: false });
+            const { data: gls } = await supabase.from('goals').select('*');
+            const { data: cats } = await supabase.from('categories').select('*');
 
             if (txs) setTransactions(txs);
             if (gls) setGoals(gls);
-            if (cats && cats.length > 0) {
-                // Merge default and custom, or just use custom + default
-                // For MVP, just append custom to default
-                setCategories([...INITIAL_CATEGORIES, ...cats]);
-            }
+            if (cats && cats.length > 0) setCategories([...INITIAL_CATEGORIES, ...cats]);
 
             setLoading(false);
         };
 
         fetchData();
+
+        // REALTIME SUBSCRIPTIONS
+        const txChannel = supabase
+            .channel('db-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions', filter: `user_id=eq.${session.user.id}` },
+                payload => {
+                    if (payload.eventType === 'INSERT') setTransactions(prev => [payload.new, ...prev]);
+                    if (payload.eventType === 'UPDATE') setTransactions(prev => prev.map(t => t.id === payload.new.id ? payload.new : t));
+                    if (payload.eventType === 'DELETE') setTransactions(prev => prev.filter(t => t.id !== payload.old.id));
+                }
+            )
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'goals', filter: `user_id=eq.${session.user.id}` },
+                payload => {
+                    if (payload.eventType === 'INSERT') setGoals(prev => [...prev, payload.new]);
+                    if (payload.eventType === 'UPDATE') setGoals(prev => prev.map(g => g.id === payload.new.id ? payload.new : g));
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(txChannel);
+        };
     }, [session]);
 
     const addTransaction = async (transaction) => {
