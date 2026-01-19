@@ -5,7 +5,7 @@ import { TransactionForm } from './components/forms/TransactionForm'
 import { TransactionHistory } from './components/TransactionHistory'
 import { Auth } from './components/Auth'
 import { useState, useRef, useEffect } from 'react'
-import { Download, Plus, List, TrendingUp, TrendingDown, LogOut } from 'lucide-react'
+import { Download, Plus, List, TrendingUp, TrendingDown, LogOut, Fingerprint } from 'lucide-react'
 import { supabase } from './lib/supabaseClient'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 
@@ -30,14 +30,19 @@ function AppContent({ session }) {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      importData(file);
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
   }
 
   const handleEnableBiometrics = async () => {
     try {
-      // NOTE: Supabase WebAuthn (Passkeys) requires the user to be logged in.
-      // This will trigger the browser's Face ID prompt to register a 'Passkey'.
       const { data, error } = await supabase.auth.mfa.enroll({
         factorType: 'webauthn',
         friendlyName: 'Mi Dispositivo'
@@ -45,8 +50,6 @@ function AppContent({ session }) {
 
       if (error) throw error;
 
-      // In a full implementation, you'd confirm the challenge here.
-      // For general "Face ID Login" we use the Passkeys API if available.
       alert('¡Configuración iniciada! Sigue las instrucciones de tu navegador para registrar Face ID.');
     } catch (error) {
       console.error(error);
