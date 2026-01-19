@@ -8,10 +8,10 @@ import { useState, useRef, useEffect } from 'react'
 import { format } from 'date-fns'
 import { Download, Upload } from 'lucide-react'
 import { supabase } from './lib/supabaseClient'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 function AppContent({ session }) {
   const financeData = useFinance() || {};
-  // Safe destructuring with defaults
   const { exportData = () => { }, importData = () => { } } = financeData;
 
   const [isIncomeOpen, setIsIncomeOpen] = useState(false);
@@ -44,6 +44,7 @@ function AppContent({ session }) {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <SpeedInsights />
       <input
         type="file"
         ref={fileInputRef}

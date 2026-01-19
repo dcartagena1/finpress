@@ -10,6 +10,7 @@ const translateError = (errorMsg) => {
     if (errorMsg.includes('Rate limit')) return 'Demasiados intentos. Intenta más tarde.';
     if (errorMsg.includes('Password should be')) return 'La contraseña es muy débil (mínimo 6 caracteres).';
     if (errorMsg.includes('Signups not allowed')) return 'El registro está deshabilitado temporalmente.';
+    if (errorMsg.includes('Email not confirmed')) return 'Debes confirmar tu correo electrónico antes de ingresar.';
     return errorMsg;
 }
 
@@ -40,7 +41,7 @@ export function Auth() {
                 if (result.error) throw result.error
                 // If email confirmation is enabled, session might be null
                 if (!result.data.session) {
-                    setMessage({ text: '¡Cuenta creada! Revisa tu correo para confirmar.', type: 'success' })
+                    setMessage({ text: '¡Cuenta creada! Revisa tu correo y haz clic en el enlace de confirmación.', type: 'success' })
                 } else {
                     setMessage({ text: '¡Bienvenido!', type: 'success' })
                 }
@@ -49,7 +50,7 @@ export function Auth() {
                 if (result.error) throw result.error
             } else if (view === 'FORGOT_PASSWORD') {
                 result = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/reset-password', // Simplified redirect
+                    redirectTo: window.location.origin + '/reset-password',
                 })
                 if (result.error) throw result.error
                 setMessage({ text: 'Se ha enviado un correo para restablecer tu contraseña.', type: 'success' })
@@ -67,7 +68,6 @@ export function Auth() {
             const { data, error } = await supabase.auth.signInWithWebAuthn({ email })
             if (error) throw error
         } catch (error) {
-            // Often "The user cancelled the operation" or "Not allowed"
             setMessage({ text: 'No se pudo iniciar con Face ID. Intenta con contraseña.', type: 'error' })
             console.error(error)
         } finally {
@@ -165,7 +165,6 @@ export function Auth() {
                     </div>
                 )}
 
-                {/* Biometric Button - Only if supported and safely handled */}
                 {view === 'LOGIN' && webAuthnSupported && (
                     <>
                         <div style={{ margin: '1.5rem 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
