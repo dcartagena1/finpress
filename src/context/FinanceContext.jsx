@@ -22,22 +22,52 @@ export const FinanceProvider = ({ children, session }) => {
     const [categories, setCategories] = useState(INITIAL_CATEGORIES);
     const [loading, setLoading] = useState(true);
 
+    // Helper to map DB (snake_case) to App (camelCase)
+    const mapToApp = (item) => {
+        if (!item) return item;
+        return {
+            ...item,
+            categoryId: item.category_id,
+            isRecurring: item.is_recurring,
+            userId: item.user_id,
+            targetAmount: item.target_amount
+        };
+    };
+
+    // Helper to map App (camelCase) to DB (snake_case)
+    const mapToDB = (item) => {
+        if (!item) return item;
+        const mapped = { ...item };
+        if ('categoryId' in mapped) { mapped.category_id = mapped.categoryId; delete mapped.categoryId; }
+        if ('isRecurring' in mapped) { mapped.is_recurring = mapped.isRecurring; delete mapped.isRecurring; }
+        if ('userId' in mapped) { mapped.user_id = mapped.userId; delete mapped.userId; }
+        if ('targetAmount' in mapped) { mapped.target_amount = mapped.targetAmount; delete mapped.targetAmount; }
+        return mapped;
+    };
+
     // Fetch initial data & Listen for changes
     useEffect(() => {
         if (!session?.user) return;
 
         const fetchData = async () => {
             setLoading(true);
+            try {
+                const { data: txs, error: txErr } = await supabase.from('transactions').select('*').order('date', { ascending: false });
+                const { data: gls, error: glErr } = await supabase.from('goals').select('*');
+                const { data: cats, error: catErr } = await supabase.from('categories').select('*');
 
-            const { data: txs } = await supabase.from('transactions').select('*').order('date', { ascending: false });
-            const { data: gls } = await supabase.from('goals').select('*');
-            const { data: cats } = await supabase.from('categories').select('*');
+                if (txErr) console.error("Error tx:", txErr);
+                if (glErr) console.error("Error gls:", glErr);
+                if (catErr) console.error("Error cats:", catErr);
 
-            if (txs) setTransactions(txs);
-            if (gls) setGoals(gls);
-            if (cats && cats.length > 0) setCategories([...INITIAL_CATEGORIES, ...cats]);
-
-            setLoading(false);
+                if (txs) setTransactions(txs.map(mapToApp));
+                if (gls) setGoals(gls.map(mapToApp));
+                if (cats && cats.length > 0) setCategories([...INITIAL_CATEGORIES, ...cats.map(mapToApp)]);
+            } catch (err) {
+                console.error("Fetch data general error:", err);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
@@ -47,15 +77,17 @@ export const FinanceProvider = ({ children, session }) => {
             .channel('db-changes')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions', filter: `user_id=eq.${session.user.id}` },
                 payload => {
-                    if (payload.eventType === 'INSERT') setTransactions(prev => [payload.new, ...prev]);
-                    if (payload.eventType === 'UPDATE') setTransactions(prev => prev.map(t => t.id === payload.new.id ? payload.new : t));
-                    if (payload.eventType === 'DELETE') setTransactions(prev => prev.filter(t => t.id !== payload.old.id));
+                    const mapped = mapToApp(payload.new || payload.old);
+                    if (payload.eventType === 'INSERT') setTransactions(prev => [mapped, ...prev]);
+                    if (payload.eventType === 'UPDATE') setTransactions(prev => prev.map(t => t.id === mapped.id ? mapped : t));
+                    if (payload.eventType === 'DELETE') setTransactions(prev => prev.filter(t => t.id !== mapped.id));
                 }
             )
             .on('postgres_changes', { event: '*', schema: 'public', table: 'goals', filter: `user_id=eq.${session.user.id}` },
                 payload => {
-                    if (payload.eventType === 'INSERT') setGoals(prev => [...prev, payload.new]);
-                    if (payload.eventType === 'UPDATE') setGoals(prev => prev.map(g => g.id === payload.new.id ? payload.new : g));
+                    const mapped = mapToApp(payload.new || payload.old);
+                    if (payload.eventType === 'INSERT') setGoals(prev => [...prev, mapped]);
+                    if (payload.eventType === 'UPDATE') setGoals(prev => prev.map(g => g.id === mapped.id ? mapped : g));
                 }
             )
             .subscribe();
@@ -66,28 +98,42 @@ export const FinanceProvider = ({ children, session }) => {
     }, [session]);
 
     const addTransaction = async (transaction) => {
+        const dbData = mapToDB({
+            ...transaction,
+            user_id: session.user.id
+        });
+
         const { data, error } = await supabase
             .from('transactions')
-            .insert([{
-                ...transaction,
-                user_id: session.user.id
-            }])
+            .insert([dbData])
             .select();
 
-        if (data) {
-            setTransactions(prev => [data[0], ...prev]);
+        if (error) {
+            console.error("Error adding transaction:", error);
+            alert("Error al guardar: " + error.message);
+            return;
+        }
+
+        if (data && data.length > 0) {
+            const mapped = mapToApp(data[0]);
+            setTransactions(prev => [mapped, ...prev]);
         }
     };
 
     const updateTransaction = async (id, updates) => {
+        const dbUpdates = mapToDB(updates);
         const { error } = await supabase
             .from('transactions')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', id);
 
-        if (!error) {
-            setTransactions(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
+        if (error) {
+            console.error("Error updating transaction:", error);
+            alert("Error al actualizar: " + error.message);
+            return;
         }
+
+        setTransactions(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
     };
 
     const deleteTransaction = async (id) => {
@@ -96,23 +142,33 @@ export const FinanceProvider = ({ children, session }) => {
             .delete()
             .eq('id', id);
 
-        if (!error) {
-            setTransactions(prev => prev.filter(t => t.id !== id));
+        if (error) {
+            console.error("Error deleting transaction:", error);
+            return;
         }
+
+        setTransactions(prev => prev.filter(t => t.id !== id));
     };
 
     const addGoal = async (goal) => {
+        const dbGoal = mapToDB({
+            ...goal,
+            user_id: session.user.id,
+            accumulated: 0
+        });
+
         const { data, error } = await supabase
             .from('goals')
-            .insert([{
-                ...goal,
-                user_id: session.user.id,
-                accumulated: 0
-            }])
+            .insert([dbGoal])
             .select();
 
+        if (error) {
+            console.error("Error adding goal:", error);
+            return;
+        }
+
         if (data) {
-            setGoals(prev => [...prev, data[0]]);
+            setGoals(prev => [...prev, mapToApp(data[0])]);
         }
     };
 
@@ -128,22 +184,32 @@ export const FinanceProvider = ({ children, session }) => {
             }])
             .select();
 
+        if (error) {
+            console.error("Error adding category:", error);
+            return null;
+        }
+
         if (data) {
-            setCategories(prev => [...prev, data[0]]);
-            return id;
+            const mapped = mapToApp(data[0]);
+            setCategories(prev => [...prev, mapped]);
+            return mapped.id;
         }
         return null;
     };
 
     const updateGoal = async (id, updates) => {
+        const dbUpdates = mapToDB(updates);
         const { error } = await supabase
             .from('goals')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', id);
 
-        if (!error) {
-            setGoals(prev => prev.map(g => g.id === id ? { ...g, ...updates } : g));
+        if (error) {
+            console.error("Error updating goal:", error);
+            return;
         }
+
+        setGoals(prev => prev.map(g => g.id === id ? { ...g, ...updates } : g));
     };
 
     // Derived State

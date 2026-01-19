@@ -69,8 +69,9 @@ export const TransactionForm = ({ type, onSuccess, initialData }) => {
                             if (e.target.value === 'NEW') {
                                 const name = prompt('Nombre de la nueva categoría:');
                                 if (name) {
-                                    const newId = addCategory(name, type);
-                                    setFormData({ ...formData, categoryId: newId });
+                                    addCategory(name, type).then(newId => {
+                                        if (newId) setFormData({ ...formData, categoryId: newId });
+                                    });
                                 }
                             } else {
                                 setFormData({ ...formData, categoryId: e.target.value });
