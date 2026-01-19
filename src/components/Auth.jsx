@@ -64,11 +64,16 @@ export function Auth() {
 
     const handleBiometricLogin = async () => {
         try {
+            if (!email) {
+                setMessage({ text: 'Por favor, ingresa tu correo primero para usar Face ID.', type: 'error' });
+                return;
+            }
             setIsLoading(true)
+            // Attempt to sign in with WebAuthn/Passkey
             const { data, error } = await supabase.auth.signInWithWebAuthn({ email })
             if (error) throw error
         } catch (error) {
-            setMessage({ text: 'No se pudo iniciar con Face ID. Intenta con contraseña.', type: 'error' })
+            setMessage({ text: 'Error Face ID: Asegúrate de haberlo configurado primero en los ajustes de la app.', type: 'error' })
             console.error(error)
         } finally {
             setIsLoading(false)

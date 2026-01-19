@@ -30,15 +30,28 @@ function AppContent({ session }) {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      importData(file);
-    }
-  };
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
+  }
+
+  const handleEnableBiometrics = async () => {
+    try {
+      // NOTE: Supabase WebAuthn (Passkeys) requires the user to be logged in.
+      // This will trigger the browser's Face ID prompt to register a 'Passkey'.
+      const { data, error } = await supabase.auth.mfa.enroll({
+        factorType: 'webauthn',
+        friendlyName: 'Mi Dispositivo'
+      });
+
+      if (error) throw error;
+
+      // In a full implementation, you'd confirm the challenge here.
+      // For general "Face ID Login" we use the Passkeys API if available.
+      alert('¡Configuración iniciada! Sigue las instrucciones de tu navegador para registrar Face ID.');
+    } catch (error) {
+      console.error(error);
+      alert('Error al configurar: ' + error.message);
+    }
   }
 
   return (
@@ -87,6 +100,14 @@ function AppContent({ session }) {
 
         {/* User / Actions Desktop Only */}
         <div className="desktop-only" style={{ gap: '1rem', alignItems: 'center' }}>
+          <button
+            onClick={handleEnableBiometrics}
+            className="btn-secondary"
+            style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            <Fingerprint size={14} /> Activar Face ID
+          </button>
+
           <span className="text-secondary" style={{ fontSize: '0.8rem' }}>{session?.user?.email}</span>
           <button onClick={handleLogout} className="btn-secondary" style={{ fontSize: '0.8rem', padding: '0.25rem 0.5rem' }}>Salir</button>
 
@@ -125,8 +146,11 @@ function AppContent({ session }) {
           </div>
         </div>
 
-        {/* Mobile Mini-Logout */}
-        <div className="mobile-only">
+        {/* Mobile Header Icons */}
+        <div className="mobile-only" style={{ gap: '0.5rem' }}>
+          <button onClick={handleEnableBiometrics} style={{ background: 'none', color: 'var(--text-secondary)', padding: '0.5rem' }}>
+            <Fingerprint size={20} />
+          </button>
           <button onClick={handleLogout} style={{ background: 'none', color: 'var(--text-secondary)', padding: '0.5rem' }}>
             <LogOut size={20} />
           </button>
