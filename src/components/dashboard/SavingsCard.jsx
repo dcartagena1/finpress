@@ -20,23 +20,24 @@ const GoalCreateForm = ({ onClose }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex-col" style={{ gap: '1rem' }}>
+        <form onSubmit={handleSubmit} className="flex-col" style={{ gap: '0.75rem' }}>
             <div>
-                <label className="text-secondary" style={{ fontSize: '0.875rem' }}>Nombre Meta</label>
+                <label className="text-secondary" style={{ fontSize: '0.8rem', display: 'block', marginBottom: '0.25rem' }}>Nombre Meta</label>
                 <input type="text" className="input" required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Ej: Vacaciones" />
             </div>
             <div>
-                <label className="text-secondary" style={{ fontSize: '0.875rem' }}>Monto Objetivo</label>
+                <label className="text-secondary" style={{ fontSize: '0.8rem', display: 'block', marginBottom: '0.25rem' }}>Monto Objetivo</label>
                 <input type="number" className="input" required value={form.target} onChange={e => setForm({ ...form, target: e.target.value })} placeholder="0" />
             </div>
             <div>
-                <label className="text-secondary" style={{ fontSize: '0.875rem' }}>Fecha Límite</label>
+                <label className="text-secondary" style={{ fontSize: '0.8rem', display: 'block', marginBottom: '0.25rem' }}>Fecha Límite</label>
                 <input type="date" className="input" required value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} />
             </div>
-            <button className="btn btn-primary" type="submit">Crear Meta</button>
+            <button className="btn btn-primary" type="submit" style={{ marginTop: '0.5rem' }}>Crear Meta</button>
         </form>
     );
 };
+
 
 export const SavingsCard = () => {
     const { goals, updateGoal } = useFinance();
