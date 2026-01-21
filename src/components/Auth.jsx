@@ -113,15 +113,14 @@ export function Auth() {
                     <div style={{
                         width: '64px',
                         height: '64px',
-                        background: 'var(--grad-primary)',
                         borderRadius: '18px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         margin: '0 auto 1.5rem auto',
-                        boxShadow: '0 0 30px rgba(59, 130, 246, 0.3)'
+                        overflow: 'hidden'
                     }}>
-                        <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>F</span>
+                        <img src="/assets/app_icon.png" alt="FinPress Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <h1 style={{ fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '0.5rem' }}>
                         {view === 'REGISTER' ? 'Crear Cuenta' : view === 'FORGOT_PASSWORD' ? 'Recuperar Clave' : view === 'UPDATE_PASSWORD' ? 'Nueva Contraseña' : 'FinPress'}
