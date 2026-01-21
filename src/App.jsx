@@ -8,6 +8,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Download, Plus, List, TrendingUp, TrendingDown, LogOut, Fingerprint } from 'lucide-react'
 import { supabase } from './lib/supabaseClient'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { WelcomeModal } from './components/WelcomeModal'
 
 function AppContent({ session }) {
   const financeData = useFinance() || {};
@@ -17,6 +18,7 @@ function AppContent({ session }) {
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(!localStorage.getItem('finpress_onboarded'));
   const fileInputRef = useRef(null);
 
   const handleEdit = (transaction) => {
@@ -57,8 +59,14 @@ function AppContent({ session }) {
     }
   }
 
+  const handleStart = () => {
+    localStorage.setItem('finpress_onboarded', 'true');
+    setShowWelcome(false);
+  };
+
   return (
     <div className="container" style={{ paddingTop: '1.5rem', paddingBottom: '6rem' }}>
+      <WelcomeModal isOpen={showWelcome} onStart={handleStart} />
       <SpeedInsights />
       <input
         type="file"
@@ -81,14 +89,13 @@ function AppContent({ session }) {
           <div style={{
             width: '36px',
             height: '36px',
-            background: 'var(--grad-primary)',
             borderRadius: '10px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 15px rgba(59, 130, 246, 0.3)'
+            overflow: 'hidden'
           }}>
-            <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white' }}>F</span>
+            <img src="/assets/logo.png" alt="FinPress Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <h1 style={{
             fontSize: '1.25rem',
