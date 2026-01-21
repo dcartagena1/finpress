@@ -95,7 +95,7 @@ function AppContent({ session }) {
             justifyContent: 'center',
             overflow: 'hidden'
           }}>
-            <img src="/assets/logo.png" alt="FinPress Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src="/assets/app_icon.png" alt="FinPress Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <h1 style={{
             fontSize: '1.25rem',
