@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const WelcomeModal = ({ isOpen, onStart }) => {
@@ -27,7 +28,7 @@ export const WelcomeModal = ({ isOpen, onStart }) => {
         }
     ];
 
-    return (
+    return createPortal(
         <div style={{
             position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.85)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000,
@@ -38,7 +39,8 @@ export const WelcomeModal = ({ isOpen, onStart }) => {
                 maxWidth: '600px',
                 padding: '0',
                 overflow: 'hidden',
-                border: '1px solid rgba(255,255,255,0.1)'
+                border: '1px solid rgba(255,255,255,0.1)',
+                position: 'relative'
             }}>
                 <div style={{
                     width: '100%',
@@ -78,6 +80,7 @@ export const WelcomeModal = ({ isOpen, onStart }) => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };

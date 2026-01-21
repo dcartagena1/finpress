@@ -18,7 +18,13 @@ function AppContent({ session }) {
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
-  const [showWelcome, setShowWelcome] = useState(!localStorage.getItem('finpress_onboarded'));
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    if (session && !localStorage.getItem('finpress_welcome_v1')) {
+      setShowWelcome(true);
+    }
+  }, [session]);
   const fileInputRef = useRef(null);
 
   const handleEdit = (transaction) => {
@@ -60,7 +66,7 @@ function AppContent({ session }) {
   }
 
   const handleStart = () => {
-    localStorage.setItem('finpress_onboarded', 'true');
+    localStorage.setItem('finpress_welcome_v1', 'true');
     setShowWelcome(false);
   };
 
